@@ -9,8 +9,8 @@ from keras.layers import Conv2D, ZeroPadding2D, Activation, Input, concatenate
 from keras.models import Model
 from keras.layers.normalization import BatchNormalization
 from keras.layers.pooling import MaxPooling2D, AveragePooling2D
-import fr_utils
 from keras.layers.core import Lambda, Flatten, Dense
+import fr_utils
 
 def inception_block_1a(X):
     """
@@ -221,7 +221,6 @@ def faceRecoModel(input_shape):
     Returns:
     model -- a Model() instance in Keras
     """
-        
     # Define the input as a tensor with shape input_shape
     X_input = Input(input_shape)
 
