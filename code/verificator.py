@@ -13,8 +13,6 @@ from inception_network import *
 from load_data import *
 
 model_dir = os.path.join(dirname(dirname(__file__)), 'model')
-print('directorio de modelo')
-print(model_dir)
 FRmodel = faceRecoModel(input_shape=(3, 96, 96))
 
 def triplet_loss(y_true, y_pred, alpha = 0.3):
@@ -25,18 +23,23 @@ def triplet_loss(y_true, y_pred, alpha = 0.3):
     loss = tf.reduce_sum(tf.maximum(basic_loss, 0.0))    
     return loss
 
+def verify(image_path, identity):
+    encoding = img_to_encoding(image_path,FRmodel)
+    dist = np.linalg.norm(np.subtract(database[identity],encoding))
+    return dist
+
 
 if (isfile(os.path.join(model_dir,'model.json')) and isfile(os.path.join(model_dir,'model.h5'))):
     ## Load saved model
     print('Loading model from disk...')
     start = time.time()
     # load json and create model
-    json_file = open('model.json', 'r')
+    json_file = open(os.path.join(model_dir,'model.json'), 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     FRmodel = model_from_json(loaded_model_json)
     # load weights into new model
-    FRmodel.load_weights("model.h5")
+    FRmodel.load_weights(os.path.join(model_dir,'model.h5'))
     print("Loaded model from disk")
     print('Model will be compiled...')
     FRmodel.compile(optimizer = 'adam', loss = triplet_loss, metrics = ['accuracy'])
@@ -67,16 +70,5 @@ else:
     FRmodel.save_weights("model.h5")
     print("Saved model to disk")
 
-
-#database = load_database(FRmodel)
-# Aca iria toda la preparacion de la base de datos de imagenes, #
-# en facenet.py lo hace de una forma distinta
-# Hardcodeado, le pongo a mano las identidades a cargar
-# database = {}
-# database["NicoMacian"] = img_path_to_encoding("images/nicomacian.png", FRmodel)
-# database["NicoMacian1"] = img_path_to_encoding("images/evaluacion.png", FRmodel)
-
-def verify(image_path, identity):
-    encoding = img_to_encoding(image_path,FRmodel)
-    dist = np.linalg.norm(np.subtract(database[identity],encoding))
-    return dist
+# Load faces' encodings
+database = load_database(FRmodel)

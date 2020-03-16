@@ -4,15 +4,17 @@ from os.path import isfile
 from fr_utils import img_path_to_encoding
 
 dirname=os.path.dirname
-data_dir = os.path.join(dirname(dirname(dirname(__file__))), 'data')
+data_dir = os.path.join(dirname(dirname(__file__)), 'data')
 
 def load_database(model, new=False):
     file_name = os.path.join(data_dir,'dataset_faces.dat')
     if isfile(file_name) and not new:
+        print('Reading dataset files...')
         with open(file_name, 'rb') as f:
 	        face_encodings = pickle.load(f)
     else:
         # tengo que leer todos los archivos .png, encodear y guardar
+        print('Creating dataset files...')
         face_encodings = {}
         for file in os.listdir(data_dir):
             if file.endswith(".png"):
