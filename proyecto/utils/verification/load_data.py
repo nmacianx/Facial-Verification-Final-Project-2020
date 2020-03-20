@@ -1,12 +1,9 @@
 import pickle
 import os
 from os.path import isfile
-from fr_utils import img_path_to_encoding
+from proyecto.utils.verification.fr_utils import img_path_to_encoding
 
-dirname=os.path.dirname
-data_dir = os.path.join(dirname(dirname(__file__)), 'data')
-
-def load_database(model, new=False):
+def load_database(model, data_dir, new=False):
     file_name = os.path.join(data_dir,'dataset_faces.dat')
     if isfile(file_name) and not new:
         print('Reading dataset files...')
@@ -16,11 +13,12 @@ def load_database(model, new=False):
         # tengo que leer todos los archivos .png, encodear y guardar
         print('Creating dataset files...')
         face_encodings = {}
-        for file in os.listdir(data_dir):
-            if file.endswith(".png"):
+        for file in os.listdir(os.path.join(data_dir,'img')):
+            if file.endswith('.png'):
                 name = os.path.splitext(file)[0]
-                face_encodings[name] = img_path_to_encoding(os.path.join(data_dir, file), model)
+                face_encodings[name] = img_path_to_encoding(os.path.join(os.path.join(data_dir,'img'), file), model)
         with open(file_name, 'wb') as f:
             pickle.dump(face_encodings, f, protocol=pickle.HIGHEST_PROTOCOL)
+        print('Dataset files created')
     return face_encodings
     

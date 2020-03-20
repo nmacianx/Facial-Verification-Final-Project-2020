@@ -10,8 +10,8 @@ from keras.layers import Conv2D, ZeroPadding2D, Activation, Input, concatenate
 from keras.models import Model
 from keras.layers.normalization import BatchNormalization
 from keras.layers.pooling import MaxPooling2D, AveragePooling2D
-import h5py
-import matplotlib.pyplot as plt
+# import h5py
+# import matplotlib.pyplot as plt
 
 
 _FLOATX = 'float32'
@@ -128,10 +128,10 @@ conv_shape = {
   'inception_5b_1x1_conv': [256, 736, 1, 1],
 }
 
-def load_weights_from_FaceNet(FRmodel):
+def load_weights_from_FaceNet(FRmodel, weights_dir):
     # Load weights from csv files (which was exported from Openface torch model)
     weights = WEIGHTS
-    weights_dict = load_weights()
+    weights_dict = load_weights(weights_dir)
 
     # Set layer weights of the model
     for name in weights:
@@ -140,15 +140,14 @@ def load_weights_from_FaceNet(FRmodel):
         elif model.get_layer(name) != None:
             model.get_layer(name).set_weights(weights_dict[name])
 
-def load_weights():
+def load_weights(weights_dir):
     # Set weights path
-    dirPath = '../../weights/verificator'
-    fileNames = filter(lambda f: not f.startswith('.'), os.listdir(dirPath))
+    fileNames = filter(lambda f: not f.startswith('.'), os.listdir(weights_dir))
     paths = {}
     weights_dict = {}
 
     for n in fileNames:
-        paths[n.replace('.csv', '')] = dirPath + '/' + n
+        paths[n.replace('.csv', '')] = weights_dir + '/' + n
 
     for name in WEIGHTS:
         if 'conv' in name:
@@ -164,30 +163,13 @@ def load_weights():
             bn_v = genfromtxt(paths[name + '_v'], delimiter=',', dtype=None)
             weights_dict[name] = [bn_w, bn_b, bn_m, bn_v]
         elif 'dense' in name:
-            dense_w = genfromtxt(dirPath+'/dense_w.csv', delimiter=',', dtype=None)
+            dense_w = genfromtxt(weights_dir+'/dense_w.csv', delimiter=',', dtype=None)
             dense_w = np.reshape(dense_w, (128, 736))
             dense_w = np.transpose(dense_w, (1, 0))
-            dense_b = genfromtxt(dirPath+'/dense_b.csv', delimiter=',', dtype=None)
+            dense_b = genfromtxt(weights_dir+'/dense_b.csv', delimiter=',', dtype=None)
             weights_dict[name] = [dense_w, dense_b]
 
     return weights_dict
-
-
-# def load_dataset():
-#     train_dataset = h5py.File('datasets/train_happy.h5', "r")
-#     train_set_x_orig = np.array(train_dataset["train_set_x"][:]) # your train set features
-#     train_set_y_orig = np.array(train_dataset["train_set_y"][:]) # your train set labels
-
-#     test_dataset = h5py.File('datasets/test_happy.h5', "r")
-#     test_set_x_orig = np.array(test_dataset["test_set_x"][:]) # your test set features
-#     test_set_y_orig = np.array(test_dataset["test_set_y"][:]) # your test set labels
-
-#     classes = np.array(test_dataset["list_classes"][:]) # the list of classes
-    
-#     train_set_y_orig = train_set_y_orig.reshape((1, train_set_y_orig.shape[0]))
-#     test_set_y_orig = test_set_y_orig.reshape((1, test_set_y_orig.shape[0]))
-    
-#     return train_set_x_orig, train_set_y_orig, test_set_x_orig, test_set_y_orig, classes
 
 def img_path_to_encoding(image_path, model):
     img1 = cv2.imread(image_path, 1)

@@ -3,49 +3,32 @@ import argparse
 import sys
 import numpy as np
 import os.path
-from verificator import *
 import time
 
-# Initialize the parameters
-confThreshold = 0.7  #Confidence threshold
-nmsThreshold = 0.4  #Non-maximum suppression threshold
+import proyecto.data.settings as SETTINGS
+from proyecto.utils.verification.verificator import verify, initialize
 
-inpWidth = 416       #Width of network's input image
-inpHeight = 416      #Height of network's input image
+verification_model, database = initialize(SETTINGS.verif_model_dir, SETTINGS.data_dir, SETTINGS.verif_weights_dir) 
 
-
-#Ese bloque lo saque pq al pedo si usamos la cam
-# parser = argparse.ArgumentParser(description='Object Detection using YOLO in OPENCV')
-# parser.add_argument('--image', help='Path to image file.')
-# parser.add_argument('--video', help='Path to video file.')
-# args = parser.parse_args()
-
-#Todo ese trozo no haria falta si lo hardcodeamos como
-#classes = ['Persona']
-#en realidad si no escribimos el label en la cam es al pedo.
 # Load names of classes
-classesFile = "obj.names";
-classes = None
-with open(classesFile, 'rt') as f:
+with open(SETTINGS.classes_file, 'rt') as f:
     classes = f.read().rstrip('\n').split('\n')
 
 
 # Give the configuration and weight files for the model and load the network using them.
-modelConfiguration = "cfg/yolov3-tiny.cfg";
-# modelConfiguration = "cfg/yolov3-tiny-prn-modif.cfg";
-modelWeights = "trained-weights/yolov3-tiny_last.weights";
-# modelWeights = "trained-weights/yolov3-tiny-prn-modif_last.weights";
-net = cv.dnn.readNetFromDarknet(modelConfiguration, modelWeights)
+
+net = cv.dnn.readNetFromDarknet(SETTINGS.cfg_recog, SETTINGS.recog_weights)
 net.setPreferableBackend(cv.dnn.DNN_BACKEND_OPENCV)
 net.setPreferableTarget(cv.dnn.DNN_TARGET_CPU)
 
+#TO BE RELOCATED
+#=======================================================================================
 # Variables usadas para la identificacion
-MAX_ATTEMPTS = 10
-VERIF_THRESHOLD = 0.5
 verifying = False
 attempts = 0
 identity = "NicoMacian1"
 state = None # Puede ser "verificado" o "rechazado"
+#=======================================================================================
 
 # Get the names of the output layers
 def getOutputsNames(net):
@@ -58,7 +41,6 @@ def getOutputsNames(net):
 def drawPred(classId, conf, left, top, right, bottom, color):
     # Draw a bounding box.
     cv.rectangle(frame, (left, top), (right, bottom), color, 3)
-
     #Si queres mostrar el label y confianza arriba de la imagen, descomenta el bloque
     '''
     label = '%.2f' % conf
@@ -181,25 +163,8 @@ def postprocess(frame, outs):
 
 #Esto tiene que ver con los argumentos que comente al principio
 outputFile = "yolo_out_py.avi"
-'''
-if (args.image):
-    # Open the image file
-    if not os.path.isfile(args.image):
-        print("Input image file ", args.image, " doesn't exist")
-        sys.exit(1)
-    cap = cv.VideoCapture(args.image)
-    outputFile = args.image[:-4]+'_yolo_out_py.jpg'
-elif (args.video):
-    # Open the video file
-    if not os.path.isfile(args.video):
-        print("Input video file ", args.video, " doesn't exist")
-        sys.exit(1)
-    cap = cv.VideoCapture(args.video)
-    outputFile = args.video[:-4]+'_yolo_out_py.avi'
-else:
-    # Webcam input
-    cap = cv.VideoCapture(0)
 
+'''
 # Get the video writer initialized to save the output video
 if (not args.image):
     vid_writer = cv.VideoWriter(outputFile, cv.VideoWriter_fourcc('M','J','P','G'), 30, (round(cap.get(cv.CAP_PROP_FRAME_WIDTH)),round(cap.get(cv.CAP_PROP_FRAME_HEIGHT))))
