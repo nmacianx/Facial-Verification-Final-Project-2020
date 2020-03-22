@@ -22,7 +22,6 @@ def writeMessage(frame, message, background_color, text_color=(0,0,0), text_scal
 def processNetworkOutput(frame_height, frame_width, outs):
     # Scan through all the bounding boxes output from the network and keep only the
     # ones with high confidence scores. Assign the box's class label as the class with the highest score.
-    classIds = []
     confidences = []
     boxes = []
     for out in outs:
@@ -42,7 +41,6 @@ def processNetworkOutput(frame_height, frame_width, outs):
                 height = int(detection[3] * frame_height)
                 left = int(center_x - width / 2)
                 top = int(center_y - height / 2)
-                classIds.append(classId)
                 confidences.append(float(confidence))
                 boxes.append([left, top, width, height])
     # Perform non maximum suppression to eliminate redundant overlapping boxes with

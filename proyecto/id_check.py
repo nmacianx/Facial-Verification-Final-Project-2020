@@ -10,9 +10,8 @@ from proyecto.utils.recognition.side_functions import getOutputsNames, processNe
 def id_checker(identity="nicolas_macian"):
     # Get verification model initialized and database with stored faces embeddings
     verification_model, database = initialize(SETTINGS.verif_model_dir, SETTINGS.data_dir, SETTINGS.verif_weights_dir) 
-    # Load names of classes (in this case there is just 1, 'persona')
-    with open(SETTINGS.classes_file, 'rt') as f:
-        classes = f.read().rstrip('\n').split('\n')
+    # for key in database.keys():
+    #     print(key)
     # Initialize face detection network model
     net = cv.dnn.readNetFromDarknet(SETTINGS.cfg_recog, SETTINGS.recog_weights)
     net.setPreferableBackend(cv.dnn.DNN_BACKEND_OPENCV)
