@@ -7,7 +7,7 @@ import proyecto.data.settings as SETTINGS
 from proyecto.utils.verification.verificator import initialize
 from proyecto.utils.recognition.side_functions import getOutputsNames, processNetworkOutput, processFaces, handleVerification, handleNotVerifying
                     
-def id_checker(identity="nico_macian"):
+def id_checker(identity="nicolas_macian"):
     # Get verification model initialized and database with stored faces embeddings
     verification_model, database = initialize(SETTINGS.verif_model_dir, SETTINGS.data_dir, SETTINGS.verif_weights_dir) 
     # Load names of classes (in this case there is just 1, 'persona')
@@ -30,13 +30,13 @@ def id_checker(identity="nico_macian"):
         # Get frame from the video feed and resize to get the center 416x416
         hasFrame, frame = cap.read()        
         frame = frame[32:448, 112:528]  # Must be changed if camera resolution is not 480x640 
-        # Get keyboard input, if space (32) was pressed then quit, if enter (13) was pressed then reset 
+        # Get keyboard input, if space (32) was pressed then reset, if enter (13) was pressed then quit 
         key = cv.waitKey(1)
         if key == 32:
-            state = 'exit'
-        elif key == 13:
             state = None
             attempts = 0
+        elif key == 13:            
+            state = 'exit'
         if state is None:
             # Create a 4D blob from a frame, image needs to be scaled by 1/255, set mean = 0 for 3 channels, swapRB=1
             blob = cv.dnn.blobFromImage(frame, 1/255, (SETTINGS.inp_width, SETTINGS.inp_height), [0,0,0], 1, crop=False)
@@ -56,7 +56,7 @@ def id_checker(identity="nico_macian"):
                 attempts = 0
                 handleNotVerifying(frame, state, option='nobody')
         else:
-            handleNotVerifying(frame, state)   
+            handleNotVerifying(frame, state, identity=identity)   
 
         ##### cambiar
         # Put efficiency information. The function getPerfProfile returns the overall time for inference(t) and the timings for each of the layers(in layersTimes)

@@ -67,11 +67,13 @@ def processFaces(frame, indices, boxes):
         positions.append([left, top, right, bottom])
     return faces, positions
 
-def handleNotVerifying(frame, state, option=None):
+def handleNotVerifying(frame, state, identity=None, option=None):
     if state == 'verified':
         writeMessage(frame, identity, SETTINGS.GREEN)
     elif state == 'denied':
         writeMessage(frame, 'Identidad no verificada', SETTINGS.RED)
+    elif state == 'created':
+        writeMessage(frame, 'Bienvenide ' + identity, SETTINGS.GREEN, text_scale=0.7)
     else:
         if option == 'big':
             writeMessage(frame, 'Muy cerca de la camara', SETTINGS.WHITE)
@@ -88,7 +90,6 @@ def handleVerificationOutput(frame, attempts, identity, dist):
 
 def handleVerification(frame, face, position, state, attempts, identity, model, database):
     face_height = (position[3]-position[1]) * 100 / frame.shape[0]  # Calculate the relative face height (without added padding)
-    print(face_height)
     if face_height < SETTINGS.face_height_max_threshold:
         if face_height > SETTINGS.face_height_min_threshold:
             # Crop frame to get the detected face, with added padding
@@ -102,7 +103,7 @@ def handleVerification(frame, face, position, state, attempts, identity, model, 
                 else:
                     drawPred(frame, position, SETTINGS.GREEN)
                     state = 'verified'
-                    handleNotVerifying(frame, state)
+                    handleNotVerifying(frame, state, identity=identity)
             else:
                 # identidad rechazada
                 state = 'denied'

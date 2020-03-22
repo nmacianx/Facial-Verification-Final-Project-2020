@@ -25,7 +25,7 @@ max_attempts = 10
 verif_threshold = 0.5
 
 #Maximum percentage a detected face can be relative to the frame height
-face_height_max_threshold = 40
+face_height_max_threshold = 50
 
 #Minimum a detected face can be relative to the frame height
 face_height_min_threshold = 25
@@ -62,6 +62,8 @@ classes_file = os.path.join(os.path.join(model_dir, 'recognition'), 'obj.names')
 #Cfg directory path
 cfg_dir = os.path.join(dirname(dirname(__file__)), 'cfg')
 
+#Name of the file where the embeddings database will be saved
+db_name = 'dataset_faces.dat'
 
 #   CONFIGURATION FILES AND WEIGHTS TO BE USED
 #=======================================================================================
@@ -80,3 +82,5 @@ RED = (0, 0, 255)
 YELLOW = (0, 255, 255)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+
+WIN_NAME = 'Sistema de deteccion facial'
