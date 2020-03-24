@@ -3,33 +3,14 @@ import cv2 as cv
 import sys
 
 import proyecto.data.settings as SETTINGS
-from proyecto.utils.new.side_functions import clear, handleCreation
+from proyecto.utils.new.side_functions import clear, handleCreation, getIdName
 from proyecto.utils.verification.verificator import initialize
 from proyecto.utils.recognition.side_functions import getOutputsNames, processNetworkOutput, processFaces, handleNotVerifying
 
 def createIdentity():
-    name_ready = False
-    name_checked = False
     # Get verification model initialized and database with stored faces embeddings
     verification_model, database = initialize() 
-    while not name_checked:
-        while not name_ready:
-            clear()
-            print('Programa para agregar una nueva identidad al sistema.')
-            print('=====================================================\n')
-            id_name = input('Escriba el nombre de la persona que se cargara: ')
-            print('Se cargara {}.'.format(id_name))
-            user_input = input('\nEs correcto el nombre? S/N \n')
-            if user_input == 's' or user_input == 'S':
-                name_ready = True
-        id_name = id_name.lower().replace(" ", "_")   # Convert input name to lowercase and replace spaces with underscores
-        if id_name in database:     # Check if name exists in the database
-            name_ready = False
-            print('\nLo sentimos, esa identidad ya esta cargada en el sistema.')
-            input('Presione una tecla para volver a comenzar.')
-        else:
-            name_checked = True
-            print('\n\nComienza la captura de la identidad...')
+    id_name = getIdName(database)   # Get user name via input
     # Initialize face detection network model
     net = cv.dnn.readNetFromDarknet(SETTINGS.cfg_recog, SETTINGS.recog_weights)
     net.setPreferableBackend(cv.dnn.DNN_BACKEND_OPENCV)
