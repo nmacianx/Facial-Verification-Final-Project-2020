@@ -40,7 +40,7 @@ def identify(database):
         id_name = input('Escriba su nombre: ')
         
         id_name = id_name.lower().replace(" ", "_")   # Convert input name to lowercase and replace spaces with underscores
-        if id_name not in database:     # Check if name exists in the database
+        if id_name not in database and id_name != 'exit':     # Check if name exists in the database
             print('\nLo sentimos, no existe alguien con ese nombre en el sistema.')
             input('Presione una tecla para volver a comenzar.')
         else:

@@ -11,12 +11,14 @@ from proyecto.utils.recognition.simple import identify
 def run():
     # Get verification model initialized and database with stored faces embeddings
     verification_model, database = initialize() 
-    identity = identify(database)
-    id_checker(verification_model, database, identity)
-
-def id_checker(verification_model, database, identity="nicolas_macian"):    
-    # for key in database.keys():
-    #     print(key)
+    identity = None
+    while identity != 'exit':
+        identity = identify(database)
+        if identity != 'exit':
+            id_checker(verification_model, database, identity)
+    print('Hasta luego!')
+    
+def id_checker(verification_model, database, identity):    
     # Initialize face detection network model
     net = cv.dnn.readNetFromDarknet(SETTINGS.cfg_recog, SETTINGS.recog_weights)
     net.setPreferableBackend(cv.dnn.DNN_BACKEND_OPENCV)
@@ -26,7 +28,13 @@ def id_checker(verification_model, database, identity="nicolas_macian"):
     state = None # Can be None if verification hasn't started, 'verified' if id
     #            # has been verified, and 'denied' if verification failed,
     #            # 'exit' if program must exit    
+
+    ##debo investigar sobre los backends, cual es la diferencia? cual es mejor?
+    # cual usa menos memoria??? cambia la resolucion
+    # cap = cv.VideoCapture(0, cv.CAP_DSHOW) # Initialize video capture
     cap = cv.VideoCapture(0) # Initialize video capture
+    # cap.set(cv.CAP_PROP_FRAME_WIDTH,1280);
+    # cap.set(cv.CAP_PROP_FRAME_HEIGHT,720);
     # print(cap.get(cv.CAP_PROP_FRAME_HEIGHT)) # Uncomment if you need to check current
     # print(cap.get(cv.CAP_PROP_FRAME_WIDTH))  # dimensions of video from camera
     while state != 'exit':
