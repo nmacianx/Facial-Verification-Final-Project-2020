@@ -1,4 +1,4 @@
-from proyecto import id_check
+from proyecto import checker
 
 if __name__ == '__main__':
-    id_check.id_checker()
+    checker.run()
