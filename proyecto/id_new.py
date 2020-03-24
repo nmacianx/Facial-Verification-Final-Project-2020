@@ -11,7 +11,7 @@ def createIdentity():
     name_ready = False
     name_checked = False
     # Get verification model initialized and database with stored faces embeddings
-    verification_model, database = initialize(SETTINGS.verif_model_dir, SETTINGS.data_dir, SETTINGS.verif_weights_dir) 
+    verification_model, database = initialize() 
     while not name_checked:
         while not name_ready:
             clear()

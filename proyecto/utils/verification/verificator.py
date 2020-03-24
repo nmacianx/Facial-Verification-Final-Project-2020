@@ -8,6 +8,7 @@ from keras import backend as K
 from keras.models import model_from_json
 K.set_image_data_format('channels_first')
 
+import proyecto.data.settings as SETTINGS
 from proyecto.utils.verification.fr_utils import load_weights_from_FaceNet, img_to_encoding
 from proyecto.utils.verification.inception_network import faceRecoModel
 from proyecto.utils.verification.load_data import load_database
@@ -25,16 +26,16 @@ def verify(image_path, identity, model, database):
     dist = np.linalg.norm(np.subtract(database[identity], encoding))
     return dist
 
-def initialize(model_dir, data_dir, weights_dir):
-    if (isfile(os.path.join(model_dir,'model.json')) and isfile(os.path.join(model_dir,'model.h5'))):
+def initialize():
+    if (isfile(os.path.join(SETTINGS.verif_model_dir,'model.json')) and isfile(os.path.join(SETTINGS.verif_model_dir,'model.h5'))):
         ## Load saved model
         print('Loading model from disk...')
         start = time.time()
-        json_file = open(os.path.join(model_dir,'model.json'), 'r')
+        json_file = open(os.path.join(SETTINGS.verif_model_dir,'model.json'), 'r')
         loaded_model_json = json_file.read()
         json_file.close()
         FRmodel = model_from_json(loaded_model_json)
-        FRmodel.load_weights(os.path.join(model_dir,'model.h5'))
+        FRmodel.load_weights(os.path.join(SETTINGS.verif_model_dir,'model.h5'))
         FRmodel.compile(optimizer = 'adam', loss = triplet_loss, metrics = ['accuracy'])
         end = time.time()
         print('Model loaded successfully in {:.2f}s.\n'.format(end-start))
@@ -44,14 +45,14 @@ def initialize(model_dir, data_dir, weights_dir):
         start = time.time()
         FRmodel = faceRecoModel(input_shape=(3, 96, 96))
         FRmodel.compile(optimizer = 'adam', loss = triplet_loss, metrics = ['accuracy'])
-        load_weights_from_FaceNet(FRmodel, weights_dir)
+        load_weights_from_FaceNet(FRmodel, SETTINGS.verif_weights_dir)
         end = time.time()
         print('Model loaded successfully in {:.2f}s.\n'.format(end-start))
         # Save generated model to reduce load times
         model_json = FRmodel.to_json()
-        with open(os.path.join(model_dir,'model.json'), "w") as json_file:
+        with open(os.path.join(SETTINGS.verif_model_dir,'model.json'), "w") as json_file:
             json_file.write(model_json)
-        FRmodel.save_weights(os.path.join(model_dir,'model.h5'))
+        FRmodel.save_weights(os.path.join(SETTINGS.verif_model_dir,'model.h5'))
         print("Model has been saved.")
-    database = load_database(FRmodel, data_dir)
+    database = load_database(FRmodel, SETTINGS.data_dir)
     return FRmodel, database

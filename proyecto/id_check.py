@@ -9,7 +9,7 @@ from proyecto.utils.recognition.side_functions import getOutputsNames, processNe
                     
 def id_checker(identity="nicolas_macian"):
     # Get verification model initialized and database with stored faces embeddings
-    verification_model, database = initialize(SETTINGS.verif_model_dir, SETTINGS.data_dir, SETTINGS.verif_weights_dir) 
+    verification_model, database = initialize() 
     # for key in database.keys():
     #     print(key)
     # Initialize face detection network model
@@ -20,9 +20,8 @@ def id_checker(identity="nicolas_macian"):
     attempts = 0
     state = None # Can be None if verification hasn't started, 'verified' if id
     #            # has been verified, and 'denied' if verification failed,
-    #            # 'exit' if program must exit
-    # Initialize video capture
-    cap = cv.VideoCapture(0)
+    #            # 'exit' if program must exit    
+    cap = cv.VideoCapture(0) # Initialize video capture
     # print(cap.get(cv.CAP_PROP_FRAME_HEIGHT)) # Uncomment if you need to check current
     # print(cap.get(cv.CAP_PROP_FRAME_WIDTH))  # dimensions of video from camera
     while state != 'exit':
@@ -66,6 +65,7 @@ def id_checker(identity="nicolas_macian"):
         cv.imshow('Sistema de deteccion facial', frame)
     # Release video feed to end program
     cap.release()
+    cv.destroyAllWindows()
     
         
 
