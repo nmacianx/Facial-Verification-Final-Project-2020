@@ -45,6 +45,7 @@ def id_checker(verification_model, database, identity):
     # print(cap.get(cv.CAP_PROP_FRAME_HEIGHT)) # Uncomment if you need to check current
     # print(cap.get(cv.CAP_PROP_FRAME_WIDTH))  # dimensions of video from camera
     while state != 'exit':
+        start_time = time.time()
         # Get frame from the video feed and resize to get the center 416x416
         hasFrame, frame = cap.read()        
         frame = frame[32:448, 112:528]  # Must be changed if camera resolution is not 480x640 
@@ -75,12 +76,11 @@ def id_checker(verification_model, database, identity):
                 handleNotVerifying(frame, state, option='nobody')
         else:
             handleNotVerifying(frame, state, identity=identity)   
-
-        ##### cambiar
-        # Put efficiency information. The function getPerfProfile returns the overall time for inference(t) and the timings for each of the layers(in layersTimes)
-        t, _ = net.getPerfProfile()
-        label = 'Tiempo de inferencia: %.2f ms' % (t * 1000.0 / cv.getTickFrequency())
+        #Show FPS information
+        end_time = time.time()
+        label = 'FPS: %.2f' % (1/(end_time - start_time))
         cv.putText(frame, label, (0, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255))
+
 
         cv.imshow('Sistema de deteccion facial', frame)
     # Release video feed to end program
