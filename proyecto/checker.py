@@ -6,18 +6,25 @@ import time
 import proyecto.data.settings as SETTINGS
 from proyecto.utils.verification.verificator import initialize
 from proyecto.utils.recognition.side_functions import getOutputsNames, processNetworkOutput, processFaces, handleVerification, handleNotVerifying
-from proyecto.utils.recognition.simple import identify
+# from proyecto.utils.recognition.simple import identify
+from proyecto.utils.new.menu import initialize_menu
 
 def run():
     # Get verification model initialized and database with stored faces embeddings
     verification_model, database = initialize() 
+    # identity = None
+    # while identity != 'exit':
+    #     identity = identify(database)
+    #     if identity != 'exit':
+    #         id_checker(verification_model, database, identity)
+    # print('Hasta luego!')
     identity = None
     while identity != 'exit':
-        identity = identify(database)
+        identity = initialize_menu(database)
         if identity != 'exit':
             id_checker(verification_model, database, identity)
     print('Hasta luego!')
-    
+
 def id_checker(verification_model, database, identity):    
     # Initialize face detection network model
     net = cv.dnn.readNetFromDarknet(SETTINGS.cfg_recog, SETTINGS.recog_weights)

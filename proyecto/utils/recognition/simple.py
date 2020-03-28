@@ -31,19 +31,19 @@ def getIdName(database):
             print('\n\nComienza la captura de la identidad...')
     return id_name
 
-def identify(database):
-    name_checked = False
-    while not name_checked:
-        clear()
-        print('Programa para verificar la identidad de una persona.')
-        print('=====================================================\n')
-        id_name = input('Escriba su nombre: ')
+# def identify(database):
+#     name_checked = False
+#     while not name_checked:
+#         clear()
+#         print('Programa para verificar la identidad de una persona.')
+#         print('=====================================================\n')
+#         id_name = input('Escriba su nombre: ')
         
-        id_name = id_name.lower().replace(" ", "_")   # Convert input name to lowercase and replace spaces with underscores
-        if id_name not in database and id_name != 'exit':     # Check if name exists in the database
-            print('\nLo sentimos, no existe alguien con ese nombre en el sistema.')
-            input('Presione una tecla para volver a comenzar.')
-        else:
-            name_checked = True
-            print('Se identificara {}...'.format(id_name))
-    return id_name
+#         id_name = id_name.lower().replace(" ", "_")   # Convert input name to lowercase and replace spaces with underscores
+#         if id_name not in database and id_name != 'exit':     # Check if name exists in the database
+#             print('\nLo sentimos, no existe alguien con ese nombre en el sistema.')
+#             input('Presione una tecla para volver a comenzar.')
+#         else:
+#             name_checked = True
+#             print('Se identificara {}...'.format(id_name))
+#     return id_name
