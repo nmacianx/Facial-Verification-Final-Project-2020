@@ -2,26 +2,27 @@ import cv2 as cv
 import sys
 import os.path
 import time
+import argparse
 
 import proyecto.data.settings as SETTINGS
 from proyecto.utils.verification.verificator import initialize
 from proyecto.utils.recognition.side_functions import getOutputsNames, processNetworkOutput, processFaces, handleVerification, handleNotVerifying
 # from proyecto.utils.recognition.simple import identify
 from proyecto.utils.new.menu import initialize_menu
-from proyecto.utils.asyncvideo.stream import WebcamVideoStream
+from proyecto.utils.asyncvideo.stream import VideoStream
 
 
-def run():
+def run(args):
     # Get verification model initialized and database with stored faces embeddings
-    verification_model, database = initialize()
+    verification_model, database = initialize() 
     identity = None
     while identity != 'exit':
         identity = initialize_menu(database)
         if identity != 'exit':
-            id_checker(verification_model, database, identity)
+            id_checker(verification_model, database, identity, args)
     print('Hasta luego!')
 
-def id_checker(verification_model, database, identity):    
+def id_checker(verification_model, database, identity, args):    
     # Initialize face detection network model
     net = cv.dnn.readNetFromDarknet(SETTINGS.cfg_recog, SETTINGS.recog_weights)
     net.setPreferableBackend(cv.dnn.DNN_BACKEND_OPENCV)
@@ -31,19 +32,12 @@ def id_checker(verification_model, database, identity):
     state = None # Can be None if verification hasn't started, 'verified' if id
     #            # has been verified, and 'denied' if verification failed,
     #            # 'exit' if program must exit    
-
-    ##debo investigar sobre los backends, cual es la diferencia? cual es mejor?
-    # cual usa menos memoria??? cambia la resolucion
-    # cap = cv.VideoCapture(0, cv.CAP_DSHOW) # Initialize video capture
-    cap = cv.VideoCapture(0) # Initialize video capture
-    # cap.set(cv.CAP_PROP_FRAME_WIDTH,1280);
-    # cap.set(cv.CAP_PROP_FRAME_HEIGHT,720);
-    # print(cap.get(cv.CAP_PROP_FRAME_HEIGHT)) # Uncomment if you need to check current
-    # print(cap.get(cv.CAP_PROP_FRAME_WIDTH))  # dimensions of video from camera
+    vs = VideoStream(usePiCamera=args["picamera"] > 0).start()
     while state != 'exit':
         start_time = time.time()
         # Get frame from the video feed and resize to get the center 416x416
-        hasFrame, frame = cap.read()        
+        # hasFrame, frame = cap.read() 
+        frame = vs.read()       
         frame = frame[32:448, 112:528]  # Must be changed if camera resolution is not 480x640 
         # Get keyboard input, if space (32) was pressed then reset, if enter (13) was pressed then quit 
         key = cv.waitKey(1)
@@ -72,16 +66,20 @@ def id_checker(verification_model, database, identity):
                 handleNotVerifying(frame, state, option='nobody')
         else:
             handleNotVerifying(frame, state, identity=identity)   
-        # #Show FPS information
+        #Show FPS information
         end_time = time.time()
         if (end_time != start_time):
             label = 'FPS: %.2f' % (1/(end_time - start_time))
             cv.putText(frame, label, (0, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255))
         cv.imshow('Sistema de deteccion facial', frame)
     # Release video feed to end program
-    cap.release()
     cv.destroyAllWindows()
-    
-        
+    vs.stop()
 
 
+# construct the argument parse and parse the arguments
+ap = argparse.ArgumentParser()
+ap.add_argument("-p", "--picamera", type=int, default=-1,
+	help="whether or not the Raspberry Pi camera should be used")
+args = vars(ap.parse_args())
+run(args)
