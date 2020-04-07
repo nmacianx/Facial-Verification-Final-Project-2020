@@ -1,0 +1,17 @@
+Pasos para correr el proyecto:
+1. Abrir la terminal y correr: cd /home/pi/ProyectoFinal2020
+2. Correr: workon cv (para abrir el ambiente virtual)
+3. Correr uno de los siguientes comandos:
+
+	sudo /home/pi/.virtualenvs/cv/bin/python -m proyecto
+	(Comando sin thread de camara)
+
+	sudo /home/pi/.virtualenvs/cv/bin/python -m proyecto.checker_v2 -p 1
+	(Comando para asincronico con camara libreria Picamera)
+
+	sudo /home/pi/.virtualenvs/cv/bin/python -m proyecto.checker_v2
+	(Comando para asincronico con camara estandar opencv)
+
+Otros comandos interesantes:
+htop (ver estado de recursos)
+vcgencmd measure_temp (medir temperatura de la placa)
