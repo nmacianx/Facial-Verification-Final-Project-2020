@@ -33,6 +33,7 @@ def id_checker(verification_model, database, identity, args):
     #            # has been verified, and 'denied' if verification failed,
     #            # 'exit' if program must exit    
     vs = VideoStream(usePiCamera=args["picamera"] > 0).start()
+    time.sleep(2.0)
     while state != 'exit':
         start_time = time.time()
         # Get frame from the video feed and resize to get the center 416x416
