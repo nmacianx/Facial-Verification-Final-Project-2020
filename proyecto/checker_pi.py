@@ -11,6 +11,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 
 def run():
+    print('Running Raspberry Pi version')
     # Get verification model initialized and database with stored faces embeddings
     verification_model, database = initialize()
     identity = None

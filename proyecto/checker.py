@@ -9,6 +9,7 @@ from proyecto.utils.recognition.side_functions import getOutputsNames, processNe
 from proyecto.utils.new.menu import initialize_menu
 
 def run():
+    print('Running PC version')
     # Get verification model initialized and database with stored faces embeddings
     verification_model, database = initialize()
     identity = None
