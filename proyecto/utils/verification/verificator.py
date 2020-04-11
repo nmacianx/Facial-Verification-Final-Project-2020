@@ -7,7 +7,7 @@ import tensorflow as tf
 from keras import backend as K
 from keras.models import model_from_json
 K.set_image_data_format('channels_first')
-
+# K.set_learning_phase(0)
 import proyecto.data.settings as SETTINGS
 from proyecto.utils.verification.fr_utils import load_weights_from_FaceNet, img_to_encoding
 from proyecto.utils.verification.inception_network import faceRecoModel
@@ -21,8 +21,8 @@ def triplet_loss(y_true, y_pred, alpha = 0.3):
     loss = tf.reduce_sum(tf.maximum(basic_loss, 0.0))    
     return loss
 
-def verify(image_path, identity, model, database):
-    encoding = img_to_encoding(image_path, model)
+def verify(image, identity, model, database):
+    encoding = img_to_encoding(image, model)
     dist = np.linalg.norm(np.subtract(database[identity], encoding))
     return dist
 
@@ -56,3 +56,9 @@ def initialize():
         print("Model has been saved.")
     database = load_database(FRmodel, SETTINGS.data_dir)
     return FRmodel, database
+
+def initPrediction(model, database):
+    identity = list(database.keys())[0]
+    image = np.zeros((96, 96, 3))
+    _ = verify(image, identity, model, database)
+    print('Prediction initialized')

@@ -1,6 +1,5 @@
 import cv2 as cv
 import numpy as np
-
 import proyecto.data.settings as SETTINGS
 from proyecto.utils.verification.verificator import verify
 

@@ -4,7 +4,7 @@ import os.path
 import time
 
 import proyecto.data.settings as SETTINGS
-from proyecto.utils.verification.verificator import initialize
+from proyecto.utils.verification.verificator import initialize, initPrediction
 from proyecto.utils.recognition.side_functions import getOutputsNames, processNetworkOutput, processFaces, handleVerification, handleNotVerifying
 from proyecto.utils.new.menu import initialize_menu
 
@@ -13,6 +13,9 @@ def run():
     # Get verification model initialized and database with stored faces embeddings
     verification_model, database = initialize()
     identity = None
+    # Initialize model prediction to prevent lag in first prediction
+    if len(database) > 0:
+        initPrediction(verification_model, database)
     while identity != 'exit':
         identity = initialize_menu(database)
         if identity != 'exit':
