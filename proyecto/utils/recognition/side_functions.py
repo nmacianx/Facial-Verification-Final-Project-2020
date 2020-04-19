@@ -92,19 +92,18 @@ def handleVerification(frame, face, position, state, attempts, identity, model, 
             # Crop frame to get the detected face, with added padding
             part_image = frame[max(0, position[1] - SETTINGS.face_padding):min(frame.shape[0], position[3] + SETTINGS.face_padding), max(0, position[0] - SETTINGS.face_padding):min(frame.shape[1], position[2] + SETTINGS.face_padding)]
             attempts += 1        
-            if not (attempts > SETTINGS.max_attempts):  # Check if within attempts limit
-                dist = verify(part_image, identity, model, database)     # The function that actually verifies the identity
-                if not (dist < SETTINGS.verif_threshold):  # Didn't verify the identity
+            dist = verify(part_image, identity, model, database)     # The function that actually verifies the identity
+            if not (dist < SETTINGS.verif_threshold):  # Didn't verify the identity
+                if attempts == SETTINGS.max_attempts:
+                    state = 'denied'
+                    handleNotVerifying(frame, state)
+                else:
                     drawPred(frame, position, SETTINGS.YELLOW)                
                     handleVerificationOutput(frame, attempts, identity, dist)
-                else:
-                    drawPred(frame, position, SETTINGS.GREEN)
-                    state = 'verified'
-                    handleNotVerifying(frame, state, identity=identity)
             else:
-                # identidad rechazada
-                state = 'denied'
-                handleNotVerifying(frame, state)
+                drawPred(frame, position, SETTINGS.GREEN)
+                state = 'verified'
+                handleNotVerifying(frame, state, identity=identity)
         else:
             attempts = 0
             drawPred(frame, position, SETTINGS.RED)
