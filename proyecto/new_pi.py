@@ -53,6 +53,7 @@ def createIdentity():
         else:
             handleNotVerifying(frame, state, identity=id_name)   
         cv.imshow(SETTINGS.WIN_NAME, frame)
+        rawCapture.truncate(0)
     # Release video feed to end program
     cap.release()
     cv.destroyAllWindows()
