@@ -19,7 +19,7 @@ inp_width = 416
 inp_height = 416
 
 #Maximum number of attempts to verify before stopping
-max_attempts = 10
+max_attempts = 100
 
 #ID verification threshold (Eucledian distance)
 verif_threshold = 0.5
