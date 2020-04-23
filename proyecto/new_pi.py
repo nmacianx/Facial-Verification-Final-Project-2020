@@ -55,7 +55,7 @@ def createIdentity():
         cv.imshow(SETTINGS.WIN_NAME, frame)
         rawCapture.truncate(0)
     # Release video feed to end program
-    cap.release()
+    camera.close()
     cv.destroyAllWindows()
 
 createIdentity()
