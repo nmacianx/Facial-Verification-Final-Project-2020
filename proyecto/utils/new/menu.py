@@ -34,5 +34,5 @@ def initialize_menu(database):
     keyboard.wait('enter')
     keyboard.unhook_all()
     print('Se identificara {}...'.format(db_list[selected]))
-    input() # Clear enter key press
+    #input() # Clear enter key press
     return db_list[selected]

@@ -12,14 +12,13 @@ def run():
     print('Running PC version')
     # Get verification model initialized and database with stored faces embeddings
     verification_model, database = initialize()
-    identity = None
     # Initialize model prediction to prevent lag in first prediction
     if len(database) > 0:
         initPrediction(verification_model, database)
+    identity = initialize_menu(database)
     while identity != 'exit':
+        id_checker(verification_model, database, identity)
         identity = initialize_menu(database)
-        if identity != 'exit':
-            id_checker(verification_model, database, identity)
     print('Hasta luego!')
 
 def id_checker(verification_model, database, identity):    
