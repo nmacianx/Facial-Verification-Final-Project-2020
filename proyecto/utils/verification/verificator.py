@@ -36,7 +36,7 @@ def initialize():
         json_file.close()
         FRmodel = model_from_json(loaded_model_json)
         FRmodel.load_weights(os.path.join(SETTINGS.verif_model_dir,'model.h5'))
-        FRmodel.compile(optimizer = 'adam', loss = triplet_loss, metrics = ['accuracy'])
+        #FRmodel.compile(optimizer = 'adam', loss = triplet_loss, metrics = ['accuracy'])
         end = time.time()
         print('Model loaded successfully in {:.2f}s.\n'.format(end-start))
     else:
@@ -44,7 +44,7 @@ def initialize():
         print('No model on disk. Starting model from scratch...')
         start = time.time()
         FRmodel = faceRecoModel(input_shape=(3, 96, 96))
-        FRmodel.compile(optimizer = 'adam', loss = triplet_loss, metrics = ['accuracy'])
+        #FRmodel.compile(optimizer = 'adam', loss = triplet_loss, metrics = ['accuracy'])
         load_weights_from_FaceNet(FRmodel, SETTINGS.verif_weights_dir)
         end = time.time()
         print('Model loaded successfully in {:.2f}s.\n'.format(end-start))
