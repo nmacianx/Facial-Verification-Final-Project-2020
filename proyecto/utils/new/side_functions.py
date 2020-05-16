@@ -10,7 +10,7 @@ def handleCreationOutput(frame, state):
     elif state == 'save':
         writeMessage(frame, 'Presione S/N para confirmar o abortar', SETTINGS.GREEN, text_scale = 0.6)
     elif state == 'confirmed':
-        writeMessage(frame, 'Guardando...', SETTINGS.GREEN)  
+        writeMessage(frame, 'Guardando...', SETTINGS.ORANGE)  
 
 
 def handleCreation(frame, face, position, state, identity, model, database):
@@ -30,10 +30,9 @@ def handleCreation(frame, face, position, state, identity, model, database):
                     elif key == 78 or key == 110: #If n or N was pressed
                         state = 'cancelled'
                 if state == 'confirmed':           
-                    # NO funcionan las 2 siguientes
                     handleCreationOutput(frame, state)            
                     cv.imshow(SETTINGS.WIN_NAME, frame)
-                    #arreglar anteriores
+                    cv.waitKey(1)
                     update_database(database, model, part_image, identity, SETTINGS.data_dir)  #Update database and save captured image
                     state = 'created'
                     handleNotVerifying(frame, state, identity=identity)   

@@ -70,7 +70,7 @@ def handleNotVerifying(frame, state, identity=None, option=None):
     elif state == 'denied':
         writeMessage(frame, 'Identidad no verificada', SETTINGS.RED)
     elif state == 'created':
-        writeMessage(frame, 'Bienvenide ' + identity, SETTINGS.GREEN, text_scale=0.7)
+        writeMessage(frame, 'Bienvenido ' + identity, SETTINGS.GREEN, text_scale=0.7)
     else:
         if option == 'big':
             writeMessage(frame, 'Muy cerca de la camara', SETTINGS.WHITE)
