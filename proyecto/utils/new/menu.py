@@ -1,5 +1,5 @@
 import keyboard
-from proyecto.utils.recognition.simple import clear
+from proyecto.utils.new.simple import clear
 
 selected = 0
 

@@ -4,7 +4,7 @@ import sys
 
 import proyecto.data.settings as SETTINGS
 from proyecto.utils.new.side_functions import handleCreation
-from proyecto.utils.recognition.simple import clear, getIdName
+from proyecto.utils.new.simple import clear, getIdName
 from proyecto.utils.verification.verificator import initialize
 from proyecto.utils.recognition.side_functions import getOutputsNames, processNetworkOutput, processFaces, handleNotVerifying
 from picamera.array import PiRGBArray
