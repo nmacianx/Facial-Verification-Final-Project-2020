@@ -96,4 +96,5 @@ def processFrame(verification_model, database, identity, net, frame, attempts, s
     cv.imshow('Sistema de deteccion facial', frame)
     return attempts, state
 
-run()
+if __name__ == "__main__":
+    run()
