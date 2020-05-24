@@ -48,15 +48,15 @@ def id_checker(verification_model, database, identity):
             # Create a 4D blob from a frame, image needs to be scaled by 1/255, set mean = 0 for 3 channels, swapRB=1
             blob = cv.dnn.blobFromImage(frame, 1/255, (SETTINGS.inp_width, SETTINGS.inp_height), [0,0,0], 1, crop=False)
             # Sets the input to the network and runs the forward pass to get output of the output layers
-            net.setInput(blob)    
+            net.setInput(blob)
             outs = net.forward(getOutputsNames(net))
-            indices, boxes = processNetworkOutput(frame.shape[0], frame.shape[1], outs)
-            if len(indices) == 1:   # If one face was detected
-                face, position = processFaces(frame, indices, boxes)
+            boxes = processNetworkOutput(frame.shape[0], frame.shape[1], outs)
+            if len(boxes) == 1:   # If one face was detected
+                face, position = processFaces(frame, boxes)
                 face = face[0]  # Get the first face in the array (there should be only one as indices=1)
                 position = position[0]  # Get the first position element in the array (there should be only one as indices=1)
                 state, attempts = handleVerification(frame, face, position, state, attempts, identity, verification_model, database)
-            elif len(indices) > 1:  # More than one face detected
+            elif len(boxes) > 1:  # More than one face detected
                 attempts = 0
                 handleNotVerifying(frame, state, option='many')
             else:       # No face was detected

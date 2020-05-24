@@ -38,24 +38,22 @@ def processNetworkOutput(frame_height, frame_width, outs):
                 boxes.append([left, top, width, height])
     # Perform non maximum suppression to eliminate redundant overlapping boxes with
     # lower confidences.
-    indices = cv.dnn.NMSBoxes(boxes, confidences, SETTINGS.recog_threshold, SETTINGS.nms_threshold)     
-    return indices, boxes
+    # indices = cv.dnn.NMSBoxes(boxes, confidences, SETTINGS.recog_threshold, SETTINGS.nms_threshold)     
+    return boxes
 
-def processFaces(frame, indices, boxes):
+def processFaces(frame, boxes):
     faces = []
     positions = []
-    for i in indices:
-        i = i[0]
-        box = boxes[i]
-        left = box[0]
-        top = box[1]
-        width = box[2]
-        height = box[3]
-        right = left + width
-        bottom = top + height
-        part_image = frame[max(0, top - SETTINGS.face_padding):min(frame.shape[0], bottom + SETTINGS.face_padding), max(0, left - SETTINGS.face_padding):min(frame.shape[1], right + SETTINGS.face_padding)]
-        faces.append(part_image)
-        positions.append([left, top, right, bottom])
+    box = boxes[0]
+    left = box[0]
+    top = box[1]
+    width = box[2]
+    height = box[3]
+    right = left + width
+    bottom = top + height
+    part_image = frame[max(0, top - SETTINGS.face_padding):min(frame.shape[0], bottom + SETTINGS.face_padding), max(0, left - SETTINGS.face_padding):min(frame.shape[1], right + SETTINGS.face_padding)]
+    faces.append(part_image)
+    positions.append([left, top, right, bottom])
     return faces, positions
 
 def handleNotVerifying(frame, state, identity=None, option=None):
