@@ -25,22 +25,16 @@ def processNetworkOutput(frame_height, frame_width, outs):
     boxes = []
     for out in outs:
         for detection in out:            
-            scores = detection[5:]      # To understand the meaning of each of the outputs of detection, see documentation
-            ##########
-            ##revisar toda esta parte
-            #############
-            #Me parece que las proximas 2 lineas no tienen sentido en el caso que reconocemos solo 1 clase
-            #Si no me equivoco en la interpretacion de los resultados
-            classId = np.argmax(scores)            
-            confidence = scores[classId]         
-            if confidence > SETTINGS.recog_threshold:
+            # The last value of detection represents the confidence for the face class (the only class actually)
+            if detection[5] > SETTINGS.recog_threshold:
                 center_x = int(detection[0] * frame_width)
                 center_y = int(detection[1] * frame_height)
                 width = int(detection[2] * frame_width)
                 height = int(detection[3] * frame_height)
                 left = int(center_x - width / 2)
                 top = int(center_y - height / 2)
-                confidences.append(float(confidence))
+                # confidences.append(float(confidence))
+                confidences.append(float(detection[5]))
                 boxes.append([left, top, width, height])
     # Perform non maximum suppression to eliminate redundant overlapping boxes with
     # lower confidences.
