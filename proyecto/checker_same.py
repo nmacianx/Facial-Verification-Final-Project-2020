@@ -100,6 +100,6 @@ def processFrame(verification_model, database, identity, net, frame, attempts, s
 if __name__ == "__main__":
     if os.name == 'nt':
         platform = 'nt'
-    else
+    else:
         platform = 'pi'
     run(platform)
