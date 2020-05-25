@@ -38,15 +38,15 @@ def createIdentity():
             # Sets the input to the network and runs the forward pass to get output of the output layers
             net.setInput(blob)    
             outs = net.forward(getOutputsNames(net))
-            indices, boxes = processNetworkOutput(frame.shape[0], frame.shape[1], outs)
-            if len(indices) == 1:   # If one face was detected
-                face, position = processFaces(frame, indices, boxes)
+            boxes = processNetworkOutput(frame.shape[0], frame.shape[1], outs)
+            if len(boxes) == 1:   # If one face was detected
+                face, position = processFaces(frame, boxes)
                 face = face[0]  # Get the first face in the array (there should be only one as indices=1)
                 position = position[0]  # Get the first position element in the array (there should be only one as indices=1)
                 if key == 32:
                     state = 'save'
                 state = handleCreation(frame, face, position, state, id_name, verification_model, database)
-            elif len(indices) > 1:  # More than one face detected
+            elif len(boxes) > 1:  # More than one face detected
                 handleNotVerifying(frame, state, option='many')
             else:       # No face was detected
                 handleNotVerifying(frame, state, option='nobody')
