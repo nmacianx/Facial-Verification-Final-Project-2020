@@ -2,6 +2,7 @@ import cv2 as cv
 import sys
 import os.path
 import time
+import os
 
 import proyecto.data.settings as SETTINGS
 from proyecto.utils.verification.verificator import initialize, initPrediction
@@ -97,4 +98,8 @@ def processFrame(verification_model, database, identity, net, frame, attempts, s
     return attempts, state
 
 if __name__ == "__main__":
-    run()
+    if os.name == 'nt':
+        platform = 'nt'
+    else
+        platform = 'pi'
+    run(platform)
