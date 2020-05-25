@@ -55,7 +55,7 @@ def id_checker(verification_model, database, identity, args):
             outs = net.forward(getOutputsNames(net))
             boxes = processNetworkOutput(frame.shape[0], frame.shape[1], outs)
             if len(boxes) == 1:   # If one face was detected
-                face, position = processFaces(frame, indices)
+                face, position = processFaces(frame, boxes)
                 face = face[0]  # Get the first face in the array (there should be only one as indices=1)
                 position = position[0]  # Get the first position element in the array (there should be only one as indices=1)
                 state, attempts = handleVerification(frame, face, position, state, attempts, identity, verification_model, database)
